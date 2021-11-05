@@ -14,7 +14,7 @@ def generateXOrder(sensors):
 
 # Load data and return X,y training data
 def loadInTrainingData(directory, xOrder):
-    files = [file for file in os.listdir(directory) if filename.endswith(".txt")]
+    files = [file for file in os.listdir(directory) if file.endswith(".txt")]
     sensors = importData(directory, files)
     return sensorToXY(sensors, xOrder)
 
@@ -70,11 +70,11 @@ def sensorToXY(sensors, xOrder):
             for x in range(0, len(item.data)):
                 Y.append(item.behaviour)
 
-    xOrder = []
-    for entry in distinctSensors:
-        for sensor in sensors:
-            if (entry == sensor.name and sensor.behaviour == behaviours[0]):
-                xOrder.append(sensor.type)
+    # xOrder = []
+    # for entry in distinctSensors:
+    #     for sensor in sensors:
+    #         if (entry == sensor.name and sensor.behaviour == behaviours[0]):
+    #             xOrder.append(sensor.type)
 
     sensorDataArraysnp = np.array([sensorDataArrays[0]])
     sensorDataArrays.pop(0)

@@ -1,11 +1,4 @@
 import time
-import board
-import busio
-import adafruit_adxl34x
-import adafruit_tsl2591
-import adafruit_tca9548a
-import adafruit_bme280
-from bmp280 import BMP280
 from datetime import datetime
 
 import os
@@ -14,6 +7,14 @@ import subprocess
 from ISStreamer.Streamer import Streamer
 
 def initialiseSensors():
+	#imports in the function will prevent errors
+	import board
+	import busio
+	import adafruit_adxl34x
+	import adafruit_tsl2591
+	import adafruit_tca9548a
+	import adafruit_bme280
+	from bmp280 import BMP280
 	print("Starting Sensor Program")
 
 	baseline_values = []
