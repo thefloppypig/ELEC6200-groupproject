@@ -5,6 +5,7 @@ from MachineLearning import generateModels
 from LoadRealData import loadinRealData, removeUselessSensors, convertSensorArrayIntoXYFormat
 from sklearn.model_selection import train_test_split
 import joblib
+import os
 
 def displayAnalytics(clf, X_test, y_test, name):
     print("Analytical Data For: " + name)
@@ -40,9 +41,9 @@ def main():
     'All_Cores']
 
     #Load in other datasets
-    X, y = loadInTrainingData("data/", xOrder)
-    XTest, yTest = loadInTrainingData("data/testdata/", xOrder)
-    XReal, yReal = loadinRealData("data/realdata/", xOrder)
+    X, y = loadInTrainingData("../data/", xOrder)
+    XTest, yTest = loadInTrainingData("../data/testdata/", xOrder)
+    XReal, yReal = loadinRealData("../data/realdata/", xOrder)
 
     print("Data Sets Loaded")
 
@@ -52,15 +53,20 @@ def main():
     #Generate Machine Learning Models
     models, oneClassModels = generateModels(X_train, y_train)
 
+    # Save Generated Models in this directory
+    save_directory = "Saved Models/"
+    if not os.path.exists(save_directory):
+        os.makedirs(save_directory)
+
     for entry in oneClassModels:
         model = oneClassModels.get(entry)
-        filename = str(entry) + '.joblib11'
+        filename = save_directory + str(entry) + '.joblib11'
         joblib.dump(model, filename)
         print(entry + " saved")
 
     for entry in models:
         model = models.get(entry)
-        filename = str(entry) + '.joblib'
+        filename = save_directory + str(entry) + '.joblib'
         joblib.dump(model, filename)
         print(entry + " saved")
 
