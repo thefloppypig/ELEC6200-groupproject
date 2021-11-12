@@ -33,7 +33,7 @@ def overwrite_files(directory):
 def turn_off_device():
     print("Turning off")
     time.sleep(1)
-    os.system('sudo shutdown -h now')
+    #os.system('sudo shutdown -h now')
     return
 
 # Create a new key
@@ -47,10 +47,10 @@ def new_key(directory):
         
 # Function to put the pi to sleep
 def goToSleep():
-    GPIO.setmode(GPIO.BCM)
-    GPIO.setup(23, GPIO.OUT)# set pin 16 as output
-    GPIO.output(23,GPIO.HIGH)
+    #GPIO.setmode(GPIO.BCM)
+    #GPIO.setup(23, GPIO.OUT)# set pin 16 as output
+    #GPIO.output(23,GPIO.HIGH)
     print("Going to sleep")
     time.sleep(1)
-    os.system('sudo shutdown -h now')
+    #os.system('sudo shutdown -h now')
     return

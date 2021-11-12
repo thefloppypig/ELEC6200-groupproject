@@ -60,5 +60,5 @@ def pollFakeSensors(data_from_file, i):
 
 	#Core Usage
 	sensorData['All_Cores'] = data_from_file['All_Cores'][row_number]
-	print("Input: "+str(sensorData))
+	
 	return sensorData

@@ -1,11 +1,11 @@
 import time
 
+import numpy as np
 from numpy.core.numeric import Infinity
 from LoadModels import loadModels
 from Sensors import initialiseSensors, pollSensors
 from FakeSensors import loadFakeSensorData, pollFakeSensors
 from Response import *
-import numpy as np
 import argparse
 import pandas as pd
 import os
@@ -89,7 +89,7 @@ def main(sensors_connected=True):
     defense_triggered = ""
     while (current_line < lines):
         # Monitoring sensors begins
-        start_time = time.time()
+        start_time_all = time.time()
         if potential_attacks < no_attacks_1_to_2:
             time.sleep(sr_level_1)
             sampling_rate = sr_level_1
@@ -101,6 +101,7 @@ def main(sensors_connected=True):
         # Get data from the sensors
         sensor_data = pollSensors(bme280, i2c, tsl1, acc) if sensors_connected else pollFakeSensors(sensor_data_from_files, current_line)
         current_line = current_line + sampling_rate
+        print("Input: " +str(sensor_data))
         # Format Data to be sent into the models
         data_entry = []
         for xEntry in xOrder:
@@ -111,8 +112,9 @@ def main(sensors_connected=True):
         data_entry = np.array(data_entry)
 
         # Send Data to the models for classification
+        start_time_ml = time.time()
         return_data, potentials = checkModels(models01, models11, attackClassificationModel, data_entry)
-        end_time = time.time()
+        end_time_ml = time.time()
         round = round + 1
         saved_results.append(return_data)
         saved_sensor_data.append(sensor_data)
@@ -137,7 +139,9 @@ def main(sensors_connected=True):
         # Output 
         if (str(return_data) == attack):
             true_positive = true_positive + 1
-        print("Output: "+ return_data + " | Expected: " + attack + " | Processing Time: " + str(end_time-start_time))
+            
+        end_time_all = time.time()
+        print("Output: "+ return_data + " | Expected: " + attack + " | Model Time: " + str(end_time_ml-start_time_ml) + " | Total Time: " + str(end_time_all-start_time_all-sampling_rate))
 
 
         # Trigger Defense
@@ -159,6 +163,7 @@ def main(sensors_connected=True):
 
 # Defenses to be executed when Level 1 is reached
 def defenseLevel1(return_data):
+    print("Defense Level 1 is activated")
     if return_data == "Unknown":
         # Unknown attack: ??
         return 
@@ -182,6 +187,7 @@ def defenseLevel1(return_data):
 
 # Defenses to be executed when Level 2 is reached
 def defenseLevel2(return_data, saved_sensor_data, xOrder):
+    print("Defense Level 2 is activated")
     if return_data == "Unknown":
         # Unknown attack: save the data which caused the unknown attack
         now = datetime.now() # current date and time
