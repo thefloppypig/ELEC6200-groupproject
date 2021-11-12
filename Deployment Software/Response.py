@@ -2,6 +2,8 @@ import os
 import shutil
 import random
 import string
+import time
+import RPi.GPIO as GPIO
 
 # copy files from one directory to another. Use for moving files to safe location or recovering files from safe location
 def copy_files(origin_directory, destination_directory):
@@ -29,7 +31,9 @@ def overwrite_files(directory):
 
 # turn off the device
 def turn_off_device():
+    print("Turning off")
     os.system('sudo shutdown -h now')
+    return
 
 # Create a new key
 def new_key(directory):
@@ -39,3 +43,13 @@ def new_key(directory):
         file = open(directory+item,"w")
         file.write("New Key")
         file.close()
+        
+# Function to put the pi to sleep
+def goToSleep():
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(23, GPIO.OUT)# set pin 16 as output
+    GPIO.output(23,GPIO.HIGH)
+    print("Going to sleep")
+    time.sleep(1)
+    os.system('sudo shutdown -h now')
+    return

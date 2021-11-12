@@ -11,10 +11,8 @@ import pandas as pd
 import os
 from datetime import datetime
 
-# RAM directory -> '/media/pi/LH TOSHIBA/dummy/datafile'
-RAM_directory = '/media/pi/LH TOSHIBA/dummy/datafile'
-# safe directory -> '/media/pi/LH TOSHIBA/dummy/recovery'
-safe_directory = '/media/pi/LH TOSHIBA/dummy/recovery'
+RAM_directory = '/home/pi/Downloads/project-master/RAM/'
+safe_directory = '/home/pi/Downloads/project-master/SAFE/'
 
 # Takes in the models and input 'x'
 # returns the tuple containing the predicted attack
@@ -54,7 +52,8 @@ def checkModels(models01, models11, attackClassificationModel, x):
 # Store input data in data_entry[]
 # Feed input data to all models
 # Print predictions
-def main(sensors_connected=True):
+def main(sensors_connected=False):
+    
     xOrder =['Lux',
     'Infrared',
     'Visible',
@@ -68,7 +67,7 @@ def main(sensors_connected=True):
     'All_Cores']
 
     # Load the sensors as normal, only use fake sensors if specified
-    attack = "Normal"
+    attack = "FreezeAttack"
     bme280, i2c, tsl1, acc = None, None, None, None if not sensors_connected else initialiseSensors()
     sensor_data_from_files, lines = None, Infinity 
     if (not sensors_connected): 
@@ -90,7 +89,7 @@ def main(sensors_connected=True):
         start_time = time.time()
         if potential_attacks < 3:
             level_1 = True
-            time.sleep(3)
+            #time.sleep(0.5)
             sampling_rate = 3
         else:
             level_1 = False
@@ -135,18 +134,19 @@ def main(sensors_connected=True):
                 goToSleep()
                 return
 
-        # Trigger Defense
-        if potential_attacks == 3:
-            defenseLevel1(return_data)
-            defense_triggered = return_data
-        if potential_attacks == 4:
-            defenseLevel2(return_data, saved_sensor_data, xOrder)
-            return
-
         # Output 
         if (str(return_data) == attack):
             true_positive = true_positive + 1
         print("Output: "+ return_data + " | Expected: " + attack + " | Processing Time: " + str(end_time-start_time))
+
+
+        # Trigger Defense
+        if potential_attacks == 3:
+            defenseLevel1(return_data)
+            defense_triggered = return_data
+        if potential_attacks == 6:
+            defenseLevel2(return_data, saved_sensor_data, xOrder)
+            return
 
     # Summary of output after while loop completes
     print("Accuracy: "+str(true_positive/round) + " | " + str(true_positive) + "/" + str(round))
@@ -231,11 +231,6 @@ def recover(defense_triggered):
         # Open lid attack: Generate a new key since it was deleted
         new_key(RAM_directory)
         return   
-
-# Function to put the pi to sleep
-def goToSleep():
-    print("Going to sleep")
-    return
 
 
 # This is run first
