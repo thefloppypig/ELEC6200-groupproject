@@ -7,8 +7,8 @@ from LoadData import calculateDistinctSensorsAndBehaviours, convertSensorArrayIn
 def loadinRealData(directory, xOrder):
     sensors = []
     sensors = loadData(sensors, directory, "FreezeAttack/", "FreezerAttack")
-    sensors = loadData(sensors, directory, "Heat/", "HeatAttack")
-    sensors = loadData(sensors, directory, "OpenLid/", "OpenLidAttack")
+    sensors = loadData(sensors, directory, "HeatAttack/", "HeatAttack")
+    sensors = loadData(sensors, directory, "OpenLidAttack/", "OpenLidAttack")
     sensors = loadData(sensors, directory, "DrillAttack/", "DrillAttack")
     sensors = loadData(sensors, directory, "Normal/", "Normal")
     sensors = removeUselessSensors(sensors)

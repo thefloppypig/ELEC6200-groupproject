@@ -41,7 +41,7 @@ def main():
     'All_Cores']
 
     #Load in other datasets
-    X, y = loadInTrainingData("../data/", xOrder)
+    X, y = loadInTrainingData("../data/workingdata/", xOrder)
     XTest, yTest = loadInTrainingData("../data/testdata/", xOrder)
     XReal, yReal = loadinRealData("../data/realdata/", xOrder)
 

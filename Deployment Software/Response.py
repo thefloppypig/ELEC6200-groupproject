@@ -3,7 +3,10 @@ import shutil
 import random
 import string
 import time
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except:
+    print("RPI.GPIO was not imported")
 
 # copy files from one directory to another. Use for moving files to safe location or recovering files from safe location
 def copy_files(origin_directory, destination_directory):

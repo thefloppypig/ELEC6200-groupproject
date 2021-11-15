@@ -8,8 +8,8 @@ from LoadData import sensorToXY
 def loadinRealData(root_directory, xOrder):
     sensors = []
     sensors = loadData(sensors, root_directory, "FreezeAttack/", "FreezerAttack")
-    sensors = loadData(sensors, root_directory, "Heat/", "HeatAttack")
-    sensors = loadData(sensors, root_directory, "OpenLid/", "OpenLidAttack")
+    sensors = loadData(sensors, root_directory, "HeatAttack/", "HeatAttack")
+    sensors = loadData(sensors, root_directory, "OpenLidAttack/", "OpenLidAttack")
     sensors = loadData(sensors, root_directory, "DrillAttack/", "DrillAttack")
     sensors = loadData(sensors, root_directory, "Normal/", "Normal")
     sensors = removeUselessSensors(sensors)

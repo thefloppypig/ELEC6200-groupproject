@@ -1,5 +1,6 @@
 RAM_directory = '../RAM/'
 safe_directory = '../SAFE/'
+data_directory = '../data/'
 monitor_directory = '../data/unknowndata/'
 
 # File to read

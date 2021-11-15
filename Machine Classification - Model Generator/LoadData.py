@@ -1,6 +1,7 @@
 import csv
 import os
 import numpy as np
+import glob
 
 from SensorData import SensorData
 
@@ -16,7 +17,8 @@ def generateXOrder(sensors):
     return xOrder
 
 def getSensorData(directory):
-    files = findFiles(directory)
+    # Get all txt files in subdirectory, excludes the unknown folder
+    files = glob.glob(directory+"**/*.txt")
     return importData(directory, files)
 
 def sensorToXY(sensors, xOrder):
@@ -26,7 +28,7 @@ def sensorToXY(sensors, xOrder):
 
 def findFiles(directory):
     #Finds all the files that need loading in
-    files = []
+    files = []  
     for filename in os.listdir(directory):
         if filename.endswith(".txt"):
             files.append(filename)
@@ -36,7 +38,7 @@ def importData(directory, files):
     #Loads in all the data
     sensors = []
     for file in files:
-        with open(directory + file) as csv_file:
+        with open(file) as csv_file:
             #print (file)
             csv_reader = csv.reader(csv_file, delimiter="\n")
             i = 0
