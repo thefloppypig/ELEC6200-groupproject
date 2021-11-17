@@ -1,7 +1,7 @@
-import os
+from os import listdir
 from sklearn.svm import SVC
 from sklearn import svm, datasets
-import joblib
+from joblib import load
 #from pyod.models.hbos import HBOS
 
 # Returns all models
@@ -14,7 +14,7 @@ def loadModels():
 # Returns Attack Classifcation model
 def loadAttackClassifcation(root_dir):
     print("Attack Classification Loaded")
-    return joblib.load(root_dir + "multiclass Algorithm.joblib")
+    return load(root_dir + "multiclass Algorithm.joblib")
 
 # Returns Anomaly models
 def loadAnomalyModels(root_dir):
@@ -27,13 +27,13 @@ def loadAnomalyModels(root_dir):
 
 # Return list of files names that match "extension" in "directory"
 def findFiles(directory, extension):
-    return [filename for filename in os.listdir(directory) if filename.endswith(extension)]
+    return [filename for filename in listdir(directory) if filename.endswith(extension)]
 
 # Load models
 def importModels(directory, files):
     models = {}
     for file in files:
         name = file[:-9]
-        models[name] = joblib.load(directory + file)
+        models[name] = load(directory + file)
         print("Loaded " + file)
     return models

@@ -1,8 +1,5 @@
-import time
-from datetime import datetime
 
-import os
-import subprocess
+from subprocess import check_output
 
 from ISStreamer.Streamer import Streamer
 
@@ -111,7 +108,7 @@ def pollSensors(bme280, i2c, tsl1, acc):
 	sensorData['Pressure'] = BME_pressure
 
 	#Core Usage
-	data = subprocess.check_output("./coreUsageTest.sh")
+	data = check_output("./coreUsageTest.sh")
 	#print("data: ", data)
 	data = str(data)
 	data = data[2:]

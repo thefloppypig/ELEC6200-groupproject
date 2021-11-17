@@ -1,12 +1,10 @@
 # This file is only used when running main.py with the '-w' flag
 # This provides sensor data to the machine learning algorithm without having any sensors attached
 
-from datetime import datetime
-from random import randrange
 from os import listdir
 from LoadData import importData
 from LoadRealData import loadinRealData
-import pandas as pd
+from pandas import read_csv
 from config import *
 
 from ISStreamer.Streamer import Streamer
@@ -27,7 +25,7 @@ def loadFakeSensorData(attack="Normal", use_training_data=True):
         print("Loading from: "+data_directory+"/realdata/" + attack + "/")
         # Retrieve Data
         directory = data_directory+"realdata/" + attack + "/" #folder which the sensor data is taken from
-        csv_data = [pd.read_csv(directory+file, sep=",", header=0) for file in listdir(directory) if file.endswith(".txt")]
+        csv_data = [read_csv(directory+file, sep=",", header=0) for file in listdir(directory) if file.endswith(".txt")]
         # Format Data
         for csv in csv_data:
             titles = csv.columns

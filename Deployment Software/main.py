@@ -1,16 +1,16 @@
-import time
+from time import time, sleep
+from numpy.core.numeric import Infinity, array
+from pandas import DataFrame
+from config import *
+from datetime import datetime
+from argparse import ArgumentParser
+from os.path import isfile
+from math import ceil
 
-import numpy as np
-from numpy.core.numeric import Infinity
 from LoadModels import loadModels
 from Sensors import initialiseSensors, pollSensors
 from FakeSensors import loadFakeSensorData, pollFakeSensors
 from Response import *
-import argparse
-import pandas as pd
-import os
-from config import *
-from datetime import datetime
 
 # Takes in the models and input 'x'
 # returns the tuple containing the predicted attack
@@ -89,14 +89,14 @@ def main(sensors_connected=True):
     defense_triggered = ""
     while (current_line < lines):
         # Monitoring sensors begins
-        start_time_all = time.time()
         if potential_attacks < no_attacks_1_to_2:
-            time.sleep(sr_level_1)
+            sleep(ceil(sr_level_1))
             sampling_rate = sr_level_1
         else:
-            time.sleep(sr_level_2)
+            sleep(ceil(sr_level_2))
             sampling_rate = sr_level_2
         # print("-------------------------")
+        start_time_all = time()
 
         # Get data from the sensors
         sensor_data = pollSensors(bme280, i2c, tsl1, acc) if sensors_connected else pollFakeSensors(sensor_data_from_files, current_line)
@@ -109,12 +109,12 @@ def main(sensors_connected=True):
                 if (xEntry == item):
                     data_entry.append(sensor_data.get(item))
 
-        data_entry = np.array(data_entry)
+        data_entry = array(data_entry)
 
         # Send Data to the models for classification
-        start_time_ml = time.time()
+        start_time_ml = time()
         return_data, potentials = checkModels(models01, models11, attackClassificationModel, data_entry)
-        end_time_ml = time.time()
+        end_time_ml = time()
         round = round + 1
         saved_results.append(return_data)
         saved_sensor_data.append(sensor_data)
@@ -140,8 +140,8 @@ def main(sensors_connected=True):
         if (str(return_data) == attack):
             true_positive = true_positive + 1
             
-        end_time_all = time.time()
-        print("Output: "+ return_data + " | Expected: " + attack + " | Model Time: " + str(end_time_ml-start_time_ml) + " | Total Time: " + str(end_time_all-start_time_all-sampling_rate))
+        end_time_all = time()
+        print("Output: "+ return_data + " | Expected: " + attack + " | Model Time: " + str(end_time_ml-start_time_ml) + " | Total Time: " + str(end_time_all-start_time_all))
 
 
         # Trigger Defense
@@ -192,8 +192,8 @@ def defenseLevel2(return_data, saved_sensor_data, xOrder):
         # Unknown attack: save the data which caused the unknown attack
         now = datetime.now() # current date and time
         csv_filename = str(monitor_directory  + "UnknownAttack"+now.strftime("_%Y_%m_%d__%H-%M-%S")+".csv")
-        df = pd.DataFrame(saved_sensor_data)
-        if not os.path.isfile(csv_filename):
+        df = DataFrame(saved_sensor_data)
+        if not isfile(csv_filename):
             df.to_csv(csv_filename, header='column_names')
         else:
             df.to_csv(csv_filename, mode='a', header='column_names')
@@ -242,7 +242,7 @@ def recover(defense_triggered):
 # This is run first
 if __name__ == "__main__":
     # Argument parser to add options and descriptions in when using 'main.py --help'
-    parser = argparse.ArgumentParser(description='Deployment script of the energy efficient tamper attack detection and response mechanisms')
+    parser = ArgumentParser(description='Deployment script of the energy efficient tamper attack detection and response mechanisms')
     parser.add_argument("-n","--nosensors", action='store_true', help="Use this option when no sensors are connected. Uses previously recorded sensor data as input.")
     args = parser.parse_args()
     # Start the main program with the arguments specified
