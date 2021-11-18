@@ -5,6 +5,7 @@ import serial, time
 def main():
     sendmsg()
 
+# takes attack name and sender number to alert owner of number of any attacks
 def sendmsg(attack='no response', receiver='+447591576004'):
     with serial.Serial('/dev/serial0', 9600, timeout=1) as ser:
         ser.write(b"AT\r\n")
