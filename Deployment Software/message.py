@@ -19,10 +19,12 @@ def sendmsg(receiver='+447591576004', alert=0, message='no response'):
         cmd=cmd1+cmd2
         ser.write(cmd.encode())
         time.sleep(0.1)
-        if error =0:
+        if error == 0:
             msg = "Device detected with"+message+ "attack" # the message sent
-        elif error=1:
-            msg = "Device I/O"+ message + "not detected" # the message sent
+        elif error==1:
+            msg = "Device I/O"+ message + "not detected" 
+        else:
+            msg= " unknown alert code"
         ser.write (msg.encode())
         ser.write (chr(26).encode())
         line2 = ser.readlines() # reading response from the sim800l module if the message is sent successfully
