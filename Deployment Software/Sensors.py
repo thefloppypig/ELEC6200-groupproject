@@ -1,6 +1,6 @@
 
 from subprocess import check_output
-
+from message import sendmsg # imports sms module
 from ISStreamer.Streamer import Streamer
 
 def initialiseSensors():
@@ -21,15 +21,36 @@ def initialiseSensors():
 	#initiate I2C
 	i2c=busio.I2C(board.SCL, board.SDA)
 	#MUX
-	tca=adafruit_tca9548a.TCA9548A(i2c)
+	try:
+		tca=adafruit_tca9548a.TCA9548A(i2c)
+	except 	ValueError:
+		sendmsg(alert=1,message='I2C')
+		print('I2C not detected')
 	#LUX1
-	tsl1=adafruit_tsl2591.TSL2591(tca[0])
+	try:
+		tsl1=adafruit_tsl2591.TSL2591(tca[0])
+	except 	ValueError:
+		sendmsg(alert=1,message='LUX sensor 1')
+		print('LUX1 not detected')
+	
 	#LUX2
-	tsl2=adafruit_tsl2591.TSL2591(tca[2])
+	try:
+		tsl2=adafruit_tsl2591.TSL2591(tca[2])
+	except 	ValueError:
+		sendmsg(alert=1,message='LUX sensor 2')
+		print('LUX2 not detected')
 	#Accelerometer
-	acc=adafruit_adxl34x.ADXL345(tca[1])
+	try:
+		acc=adafruit_adxl34x.ADXL345(tca[1])
+	except 	ValueError:
+		sendmsg(alert=1,message='Accelerometer')
+		print('ACC not detected')
 	#BME280
-	bme280 = adafruit_bme280.Adafruit_BME280_I2C(tca[3])
+	try:
+		bme280 = adafruit_bme280.Adafruit_BME280_I2C(tca[3])
+	except 	ValueError:
+		sendmsg(alert=1,message='BME280')
+		print('BME280 not detected')
 
 	print("BMP280")
 	#BMP280
