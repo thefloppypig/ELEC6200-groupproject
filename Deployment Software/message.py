@@ -5,8 +5,8 @@ import serial, time
 def main():
     sendmsg()
 
-# takes attack name and sender number to alert owner of number of any attacks
-def sendmsg(attack='no response', receiver='+447591576004'):
+# takes sender number and to notify owner of attacks or any hardware connection problems
+def sendmsg(receiver='+447591576004', alert=0, message='no response'):
     with serial.Serial('/dev/serial0', 9600, timeout=1) as ser:
         ser.write(b"AT\r\n")
         line = ser.readlines() # reads line to check if sim800l is working properly
@@ -19,7 +19,10 @@ def sendmsg(attack='no response', receiver='+447591576004'):
         cmd=cmd1+cmd2
         ser.write(cmd.encode())
         time.sleep(0.1)
-        msg = "Device detected with"+attack+ "attack" # the message sent
+        if error =0:
+            msg = "Device detected with"+message+ "attack" # the message sent
+        elif error=1:
+            msg = "Device I/O"+ message + "not detected" # the message sent
         ser.write (msg.encode())
         ser.write (chr(26).encode())
         line2 = ser.readlines() # reading response from the sim800l module if the message is sent successfully
