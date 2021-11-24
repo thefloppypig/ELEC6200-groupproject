@@ -9,7 +9,7 @@ sr_level_1 = 1 # sec
 sr_level_2 = 1 # sec
 
 # Up in severity
-potential_attacks = 0
+p_a = 0
 no_attacks_1_to_2 = 2
 no_attacks_2_to_attack = 100
 

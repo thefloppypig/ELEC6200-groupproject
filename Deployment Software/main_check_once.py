@@ -3,7 +3,6 @@ from numpy.core.numeric import Infinity, array
 from pandas import DataFrame
 from config import *
 from datetime import datetime
-
 from LoadModels import loadModels
 from Sensors import initialiseSensors, pollSensors
 from Response import *
@@ -28,7 +27,6 @@ def checkModels(models01, models11, attackClassificationModel, x):
         return "Unknown", 0
 
 def main():
-    
     xOrder =['Lux',
     'Infrared',
     'Visible',
@@ -48,13 +46,13 @@ def main():
     # Load models
     models01, models11, attackClassificationModel = loadModels()
 
-    #Prepare input for model
+    # Prepare input for model
     data_entry = []
     for xEntry in xOrder:
         for item in sensor_data:
             if (xEntry == item):
                 data_entry.append(sensor_data.get(item))
-    data_entry = np.array(data_entry)
+    data_entry = array(data_entry)
 
     # Check
     return_data, potentials = checkModels(models01, models11, attackClassificationModel, data_entry)

@@ -1,4 +1,4 @@
-# L1 to L2 
+# L1 to L1 
 
 RAM_directory = '../RAM/'
 safe_directory = '../SAFE/'
@@ -9,14 +9,14 @@ sr_level_1 = 1 # sec
 sr_level_2 = 1 # sec
 
 # Up in severity
-potential_attacks = 0
-no_attacks_1_to_2 = 1
+p_a = 0 # potential_attacks
+no_attacks_1_to_2 = 2
 no_attacks_2_to_attack = 100
 
 # Down in severity
-sleep_count = 100
-no_normal_1_to_sleep = 100
-reset_count = 100
+s_c = 1
+no_normal_1_to_sleep = 1
+r_c = 100
 no_normal_2_to_1 = 100
 
 

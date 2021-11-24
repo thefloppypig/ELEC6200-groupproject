@@ -29,7 +29,7 @@ def overwrite_files(directory):
 
     for item in filelist:
         file = open(directory+item,"w")
-        file.write(choice(ascii_letters, 5))
+        file.write(choice(ascii_letters))
         file.close()
 
 # turn off the device

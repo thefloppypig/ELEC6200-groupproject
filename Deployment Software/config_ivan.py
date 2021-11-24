@@ -9,15 +9,15 @@ sr_level_1 = 1 # sec
 sr_level_2 = 1 # sec
 
 # Up in severity
-potential_attacks = 0
+p_a = 0
 no_attacks_1_to_2 = 2
-no_attacks_2_to_attack = 100
+no_attacks_2_to_attack = 4
 
 # Down in severity
 sleep_count = 0
-no_normal_1_to_sleep = 1
-reset_count = 100
-no_normal_2_to_1 = 100
+no_normal_1_to_sleep = 2
+reset_count = 0
+no_normal_2_to_1 = 2
 
 
 # LEVEL

@@ -1,9 +1,9 @@
 from time import time, sleep
 from numpy.core.numeric import Infinity, array
 from pandas import DataFrame
-from config import *
+from config_ivan import *
 from datetime import datetime
-
+from os.path import isfile
 from LoadModels import loadModels
 from Sensors import initialiseSensors, pollSensors
 from Response import *
@@ -40,6 +40,7 @@ def checkModels(models01, models11, attackClassificationModel, x):
         return "Unknown", 0
 
 def main():
+    potential_attacks = p_a
     
     xOrder =['Lux',
     'Infrared',
@@ -59,9 +60,6 @@ def main():
     # Load models
     models01, models11, attackClassificationModel = loadModels()
 
-    # Counters
-    i = 0 # Only for instruction count
-
     # Monitoring storage
     saved_results = []
     saved_sensor_data = []
@@ -70,14 +68,17 @@ def main():
     defense_triggered = ""
     
     # LOOP ONCE
-    while (i == 0):
+    i = 0
+    while (i != 10):
         i = i + 1
 
         # Set sampling rate according to risk
         if potential_attacks < no_attacks_1_to_2:
-            time.sleep(sr_level_1)
+            print('L1')
+            sleep(sr_level_1)
         else:
-            time.sleep(sr_level_2)
+            print('L2') 
+            sleep(sr_level_2)
 
         # Get models' input data from sensors
         sensor_data = pollSensors(bme280, i2c, tsl1, acc)
@@ -86,7 +87,7 @@ def main():
             for item in sensor_data:
                 if (xEntry == item):
                     data_entry.append(sensor_data.get(item))
-        data_entry = np.array(data_entry)
+        data_entry = array(data_entry)
 
         # Classify data
         return_data, potentials = checkModels(models01, models11, attackClassificationModel, data_entry)
@@ -97,15 +98,20 @@ def main():
 
         # Count detected attacks and recover/sleep
         if return_data != "Normal": # If there is an attack
+            print('1')
             potential_attacks = potential_attacks + 1
             sleep_count = 0
             reset_count = 0
         elif potential_attacks < no_attacks_1_to_2: # If in level 1 and no attack detected
+            print('2')
+            sleep_count = s_c
             sleep_count = sleep_count + 1
             if sleep_count > no_normal_1_to_sleep: # If no attacks when in level 1 for a long time, go to sleep
                 goToSleep()
                 return
         else: # If in level 2 and no attack detected
+            print('3')
+            reset_count = r_c
             reset_count = reset_count + 1
             potential_attacks = 0
             if reset_count > no_normal_2_to_1: # If no attacks when in level 2 for a long time, reset to level 1
@@ -114,15 +120,21 @@ def main():
 
         # Trigger Defense
         if potential_attacks == no_attacks_1_to_2:
+            print('D1')
             defenseLevel1(return_data)
             defense_triggered = return_data
-        if potential_attacks == no_attacks_2_to_attack:
+        elif potential_attacks == no_attacks_2_to_attack:
+            print('D2')
             defenseLevel2(return_data, saved_sensor_data, xOrder)
             return
+        else:
+            print('No D')
 
 # Defenses to be executed when Level 1 is reached
 def defenseLevel1(return_data):
     if return_data == "Unknown":
+        copy_files(RAM_directory, safe_directory)
+#         overwrite_files(RAM_directory)
         # Unknown attack: ??
         return 
     elif return_data == "FreezerAttack":
@@ -146,13 +158,16 @@ def defenseLevel1(return_data):
 def defenseLevel2(return_data, saved_sensor_data, xOrder):
     if return_data == "Unknown":
         # Unknown attack: save the data which caused the unknown attack
-        now = datetime.now() # current date and time
-        csv_filename = str(monitor_directory  + "UnknownAttack"+now.strftime("_%Y_%m_%d__%H-%M-%S")+".csv")
-        df = pd.DataFrame(saved_sensor_data)
-        if not os.path.isfile(csv_filename):
-            df.to_csv(csv_filename, header='column_names')
-        else:
-            df.to_csv(csv_filename, mode='a', header='column_names')
+#         now = datetime.now() # current date and time
+#         csv_filename = str(monitor_directory  + "UnknownAttack"+now.strftime("_%Y_%m_%d__%H-%M-%S")+".csv")
+#         df = DataFrame(saved_sensor_data)
+#         if not isfile(csv_filename):
+#             df.to_csv(csv_filename, header='column_names')
+#         else:
+#             df.to_csv(csv_filename, mode='a', header='column_names')
+        delete_files(RAM_directory)
+        turn_off_device()
+        return
     elif return_data == "FreezerAttack":
         # Freeze attack: Turn off device
         turn_off_device()

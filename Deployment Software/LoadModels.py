@@ -1,6 +1,6 @@
 from os import listdir
-from sklearn.svm import SVC
-from sklearn import svm, datasets
+#from sklearn.svm import SVC
+#from sklearn import svm, datasets
 from joblib import load
 #from pyod.models.hbos import HBOS
 
@@ -14,7 +14,7 @@ def loadModels():
 # Returns Attack Classifcation model
 def loadAttackClassifcation(root_dir):
     print("Attack Classification Loaded")
-    return load(root_dir + "multiclass Algorithm.joblib")
+    return load(root_dir + "multiclass Algorithm pi.joblib")
 
 # Returns Anomaly models
 def loadAnomalyModels(root_dir):
