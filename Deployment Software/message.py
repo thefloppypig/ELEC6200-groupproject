@@ -19,9 +19,9 @@ def sendmsg(receiver='+447591576004', alert=0, message='no response'):
         cmd=cmd1+cmd2
         ser.write(cmd.encode())
         time.sleep(0.1)
-        if error == 0:
+        if alert == 0:
             msg = "Device detected with"+message+ "attack" # the message sent
-        elif error==1:
+        elif alert==1:
             msg = "Device I/O"+ message + "not detected" 
         else:
             msg= " unknown alert code"
