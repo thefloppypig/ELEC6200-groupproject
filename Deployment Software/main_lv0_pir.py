@@ -8,6 +8,7 @@ from argparse import ArgumentParser
 from os.path import isfile
 from math import ceil
 
+from message import sendmsg
 from LoadModels import loadModels
 from Sensors import initialiseSensors, pollSensors
 from FakeSensors import loadFakeSensorData, pollFakeSensors
@@ -191,19 +192,24 @@ def defenseLevel1(return_data):
         # Unknown attack: ??
         return 
     elif return_data == "FreezerAttack":
-        # Freeze attack: Delete key in RAM
+        # Freeze attack: Delete key in RAM and SMS notify
+        sendmsg(message=return_data)
         overwrite_files(RAM_directory)
         return
     elif return_data == "HeatAttack":
-        # Heat attack: Move data to a safe location
+        # Heat attack: Move data to a safe location and SMS notify
+        sendmsg(message=return_data)
         copy_files(RAM_directory, safe_directory)
         return
     elif return_data == "DrillAttack":
-        # Drill attack: Move data to a safe location
+        # Drill attack: Move data to a safe location and SMS notify
+        sendmsg(message=return_data)
         copy_files(RAM_directory, safe_directory)
+
         return
     elif return_data == "OpenLidAttack":
-        # Open lid attack: Delete key from RAM
+        # Open lid attack: Delete key from RAM and SMS notify
+        sendmsg(message=return_data)
         overwrite_files(RAM_directory)
         return
 
