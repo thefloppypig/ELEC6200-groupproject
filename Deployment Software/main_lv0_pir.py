@@ -189,7 +189,8 @@ def defenseLevel0(sleep_mode):       #<--- edited
 def defenseLevel1(return_data):
     print("Defense Level 1 is activated")
     if return_data == "Unknown":
-        # Unknown attack: ??
+        # Unknown attack: ?? and SMS notify
+        sendmsg(message=return_data)
         return 
     elif return_data == "FreezerAttack":
         # Freeze attack: Delete key in RAM and SMS notify
